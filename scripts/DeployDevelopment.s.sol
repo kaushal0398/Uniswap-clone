@@ -78,4 +78,24 @@ contract DeployDevelopment is Script, TestUtils {
             1
         );
 
-        
+        function testCalcAmount0DeltaNegative() public {
+        int256 amount0 = Math.calcAmount0Delta(
+            TickMath.getSqrtRatioAtTick(85176),
+            TickMath.getSqrtRatioAtTick(86129),
+            int128(-1517882343751509868544)
+        );
+
+        assertEq(amount0, -0.998833192822975408 ether);
+    }
+
+    function testCalcAmount1DeltaNegative() public {
+        int256 amount1 = Math.calcAmount1Delta(
+            TickMath.getSqrtRatioAtTick(84222),
+            TickMath.getSqrtRatioAtTick(85176),
+            int128(-1517882343751509868544)
+        );
+
+        assertEq(amount1, -4999.187247111820044640 ether);
+    }
+}
+
