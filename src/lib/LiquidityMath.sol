@@ -42,4 +42,11 @@ library LiquidityMath {
         );
     }
 
-    
+    function testCalcAmount0DeltaNegative() public {
+        int256 amount0 = Math.calcAmount0Delta(
+            TickMath.getSqrtRatioAtTick(85176),
+            TickMath.getSqrtRatioAtTick(86129),
+            int128(-1517882343751509868544)
+        );
+
+        
