@@ -70,4 +70,11 @@ contract DeployDevelopment is Script, TestUtils {
             20_000
         );
 
-        
+        func NewGenesisBlock() *Block {
+	return NewBlock("Genesis Block", []byte{}) // creates a Genesis block using malloc
+}
+
+func NewBlockchain() *Blockchain {
+	var blockchain = Blockchain{[]*Block{NewGenesisBlock()}}
+	return &blockchain
+}
