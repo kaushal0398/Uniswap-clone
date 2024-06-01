@@ -54,27 +54,4 @@ contract DeployDevelopment is Script, TestUtils {
             5000
         );
 
-        UniswapV3Pool wethUni = deployPool(
-            factory,
-            address(weth),
-            address(uni),
-            3000,
-            10
-        );
-
-        UniswapV3Pool wbtcUSDT = deployPool(
-            factory,
-            address(wbtc),
-            address(usdt),
-            3000,
-            20_000
-        );
-
-        func NewGenesisBlock() *Block {
-	return NewBlock("Genesis Block", []byte{}) // creates a Genesis block using malloc
-}
-
-func NewBlockchain() *Blockchain {
-	var blockchain = Blockchain{[]*Block{NewGenesisBlock()}}
-	return &blockchain
-}
+        
