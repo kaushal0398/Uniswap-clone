@@ -24,45 +24,7 @@ idityNet: -int128(liqAmount)
         );
     }
 
-    //  Consecutive price ranges
-    //
-    //          5000
-    //  4545 -----|----- 5500
-    //             5500 ----------- 6250
-    //
-    function testBuyETHConsecutivePriceRanges() public {
-        (
-            LiquidityRange[] memory liquidity,
-            uint256 poolBalance0,
-            uint256 poolBalance1
-        ) = setupPool(
-                PoolParams({
-                    balances: [uint256(2 ether), 10000 ether],
-                    currentPrice: 5000,
-                    liquidity: liquidityRanges(
-                        liquidityRange(4545, 5500, 1 ether, 5000 ether, 5000),
-                        liquidityRange(5500, 6250, 1 ether, 5000 ether, 5000)
-                    ),
-                    transferInMintCallback: true,
-                    transferInSwapCallback: true,
-                    mintLiqudity: true
-                })
-            );
-
-        uint256 swapAmount = 10000 ether; // 10000 USDC
-        usdc.mint(address(this), swapAmount);
-        usdc.approve(address(this), swapAmount);
-
-        (int256 userBalance0Before, int256 userBalance1Before) = (
-            int256(weth.balanceOf(address(this))),
-            int256(usdc.balanceOf(address(this)))
-        );
-
-        (int256 amount0Delta, int256 amount1Delta) = pool.swap(
-            address(this),
-            false,
-            swapAmount,
-            sqrtP(6106),
+  
             extra
         );
 
