@@ -126,4 +126,16 @@ contract UniswapV3Quoter {
         }
     }
 
-    
+    function getPool(
+        address token0,
+        address token1,
+        uint24 fee
+    ) internal view returns (IUniswapV3Pool pool) {
+        (token0, token1) = token0 < token1
+            ? (token0, token1)
+            : (token1, token0);
+        pool = IUniswapV3Pool(
+            PoolAddress.computeAddress(factory, token0, token1, fee)
+        );
+    }
+}
