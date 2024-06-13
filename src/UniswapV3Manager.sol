@@ -205,21 +205,4 @@ contract UniswapV3Manager is IUniswapV3Manager {
         int256 amount1,
         bytes calldata data_
     ) public {
-        SwapCallbackData memory data = abi.decode(data_, (SwapCallbackData));
-        (address tokenIn, address tokenOut, ) = data.path.decodeFirstPool();
-
-        bool zeroForOne = tokenIn < tokenOut;
-
-        int256 amount = zeroForOne ? amount0 : amount1;
-
-        if (data.payer == address(this)) {
-            IERC20(tokenIn).transfer(msg.sender, uint256(amount));
-        } else {
-            IERC20(tokenIn).transferFrom(
-                data.payer,
-                msg.sender,
-                uint256(amount)
-            );
-        }
-    }
-}
+        
