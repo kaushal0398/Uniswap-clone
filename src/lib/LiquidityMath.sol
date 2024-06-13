@@ -42,53 +42,32 @@ library LiquidityMath {
         );
     }
 
-    function getLiquidityForAmounts(
-        uint160 sqrtPriceX96,
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
-        uint256 amount0,
-        uint256 amount1
-    ) internal pure returns (uint128 liquidity) {
-        if (sqrtPriceAX96 > sqrtPriceBX96)
-            (sqrtPriceAX96, sqrtPriceBX96) = (sqrtPriceBX96, sqrtPriceAX96);
+    function testCalcAmount0DeltaNegative() public {
+        int256 amount0 = Math.calcAmount0Delta(
+            TickMath.getSqrtRatioAtTick(85176),
+            TickMath.getSqrtRatioAtTick(86129),
+            int128(-1517882343751509868544)
+        );
 
-        if (sqrtPriceX96 <= sqrtPriceAX96) {
-            liquidity = getLiquidityForAmount0(
-                sqrtPriceAX96,
-                sqrtPriceBX96,
-                amount0
-            );
-        } else if (sqrtPriceX96 <= sqrtPriceBX96) {
-            uint128 liquidity0 = getLiquidityForAmount0(
-                sqrtPriceX96,
-                sqrtPriceBX96,
-                amount0
-            );
-            uint128 liquidity1 = getLiquidityForAmount1(
-                sqrtPriceAX96,
-                sqrtPriceX96,
-                amount1
-            );
+        function testCalcAmount0DeltaNegative() public {
+        int256 amount0 = Math.calcAmount0Delta(
+            TickMath.getSqrtRatioAtTick(85176),
+            TickMath.getSqrtRatioAtTick(86129),
+            int128(-1517882343751509868544)
+        );
 
-            liquidity = liquidity0 < liquidity1 ? liquidity0 : liquidity1;
-        } else {
-            liquidity = getLiquidityForAmount1(
-                sqrtPriceAX96,
-                sqrtPriceBX96,
-                amount1
-            );
-        }
+        assertEq(amount0, -0.998833192822975408 ether);
     }
 
-    function addLiquidity(uint128 x, int128 y)
-        internal
-        pure
-        returns (uint128 z)
-    {
-        if (y < 0) {
-            z = x - uint128(-y);
-        } else {
-            z = x + uint128(y);
-        }
+    function testCalcAmount1DeltaNegative() public {
+        int256 amount1 = Math.calcAmount1Delta(
+            TickMath.getSqrtRatioAtTick(84222),
+            TickMath.getSqrtRatioAtTick(85176),
+            int128(-1517882343751509868544)
+        );
+
+        assertEq(amount1, -4999.187247111820044640 ether);
     }
 }
+
+

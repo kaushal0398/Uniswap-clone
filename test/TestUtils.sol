@@ -126,7 +126,7 @@ abstract contract TestUtils is Test, Assertions {
             );
     }
 
-    function mintParams(
+   function mintParams(
         address tokenA,
         address tokenB,
         uint256 lowerPrice,
@@ -180,3 +180,4 @@ abstract contract TestUtils is Test, Assertions {
         pool.initialize(sqrtP(currentPrice));
     }
 }
+ 

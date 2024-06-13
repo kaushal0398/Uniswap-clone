@@ -46,3 +46,4 @@ contract MathTest is Test {
         assertEq(amount1, -4999.187247111820044640 ether);
     }
 }
+
