@@ -87,8 +87,5 @@ contract UniswapV3Manager is IUniswapV3Manager {
             )
         );
 
-        if (amount0 < params.amount0Min || amount1 < params.amount1Min)
-            revert SlippageCheckFailed(amount0, amount1);
-    }
-
+       
    
