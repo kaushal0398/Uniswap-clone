@@ -7,9 +7,7 @@ library SwapMath {
     function computeSwapStep(
         uint160 sqrtPriceCurrentX96,
         uint160 sqrtPriceTargetX96,
-        uint128 liquidity,
-        uint256 amountRemaining,
-        uint24 fee
+       
     )
         internal
         pure
