@@ -741,22 +741,4 @@ contract UniswapV3NFTManagerTest is Test, TestUtils {
         );
     }
 
-    function nfts(ExpectedNFT memory nft_)
-        internal
-        pure
-        returns (ExpectedNFT[] memory nfts_)
-    {
-        nfts_ = new ExpectedNFT[](1);
-        nfts_[0] = nft_;
-    }
-
-    function nfts(ExpectedNFT memory nft0, ExpectedNFT memory nft1)
-        internal
-        pure
-        returns (ExpectedNFT[] memory nfts_)
-    {
-        nfts_ = new ExpectedNFT[](2);
-        nfts_[0] = nft0;
-        nfts_[1] = nft1;
-    }
-}
+   
