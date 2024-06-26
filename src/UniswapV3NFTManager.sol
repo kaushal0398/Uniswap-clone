@@ -337,20 +337,4 @@ contract UniswapV3NFTManager is ERC721 {
         );
     }
 
-    /*
-        Returns position ID within the NFT manager
-    */
-    function positionKey(TokenPosition memory position)
-        internal
-        pure
-        returns (bytes32 key)
-    {
-        key = keccak256(
-            abi.encodePacked(
-                address(position.pool),
-                position.lowerTick,
-                position.upperTick
-            )
-        );
-    }
-}
+    
