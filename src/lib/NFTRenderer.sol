@@ -141,17 +141,3 @@ library NFTRenderer {
             tickToText(upperTick)
         );
     }
-
-    function feeToText(uint256 fee)
-        internal
-        pure
-        returns (string memory feeString)
-    {
-        if (fee == 500) {
-            feeString = "0.05%";
-        } else if (fee == 3000) {
-            feeString = "0.3%";
-        }
-    }
-
-    f
