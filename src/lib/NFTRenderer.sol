@@ -154,16 +154,4 @@ library NFTRenderer {
         }
     }
 
-    function tickToText(int24 tick)
-        internal
-        pure
-        returns (string memory tickString)
-    {
-        tickString = string.concat(
-            tick < 0 ? "-" : "",
-            tick < 0
-                ? Strings.toString(uint256(uint24(-tick)))
-                : Strings.toString(uint256(uint24(tick)))
-        );
-    }
-}
+    f
