@@ -85,10 +85,4 @@ library SwapMath {
             );
         }
 
-        if (!max) {
-            feeAmount = amountRemaining - amountIn;
-        } else {
-            feeAmount = Math.mulDivRoundingUp(amountIn, fee, 1e6 - fee);
-        }
-    }
-}
+       
