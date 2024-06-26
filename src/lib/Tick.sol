@@ -12,8 +12,7 @@ library Tick {
         // amount of liqudiity added or subtracted when tick is crossed
         int128 liquidityNet;
         // fee growth on the other side of this tick (relative to the current tick)
-        uint256 feeGrowthOutside0X128;
-        uint256 feeGrowthOutside1X128;
+        
     }
 
     function update(
