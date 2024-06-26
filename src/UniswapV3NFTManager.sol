@@ -10,12 +10,7 @@ import "./lib/NFTRenderer.sol";
 import "./lib/PoolAddress.sol";
 import "./lib/TickMath.sol";
 
-contract UniswapV3NFTManager is ERC721 {
-    error NotAuthorized();
-    error NotEnoughLiquidity();
-    error PositionNotCleared();
-    error SlippageCheckFailed(uint256 amount0, uint256 amount1);
-    error WrongToken();
+
 
     event AddLiquidity(
         uint256 indexed tokenId,
