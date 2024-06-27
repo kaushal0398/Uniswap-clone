@@ -220,11 +220,3 @@ library Oracle {
         }
     }
 }
-.tickCumulative +
-                ((atOrAfter.tickCumulative - beforeOrAt.tickCumulative) /
-                    int56(observationTimeDelta)) *
-                int56(targetDelta);
-        }
-    }
-
-    
