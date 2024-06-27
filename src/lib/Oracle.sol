@@ -198,7 +198,29 @@ library Oracle {
                 beforeOrAt.timestamp;
             uint56 targetDelta = target - beforeOrAt.timestamp;
             return
-                beforeOrAt.tickCumulative +
+                beforeOrAtfunction observe(
+        Observation[65535] storage self,
+        uint32 time,
+        uint32[] memory secondsAgos,
+        int24 tick,
+        uint16 index,
+        uint16 cardinality
+    ) internal view returns (int56[] memory tickCumulatives) {
+        tickCumulatives = new int56[](secondsAgos.length);
+
+        for (uint256 i = 0; i < secondsAgos.length; i++) {
+            tickCumulatives[i] = observeSingle(
+                self,
+                time,
+                secondsAgos[i],
+                tick,
+                index,
+                cardinality
+            );
+        }
+    }
+}
+.tickCumulative +
                 ((atOrAfter.tickCumulative - beforeOrAt.tickCumulative) /
                     int56(observationTimeDelta)) *
                 int56(targetDelta);
