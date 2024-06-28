@@ -46,16 +46,6 @@ library NFTRenderer {
             params.upperTick
         );
 
-        string memory json = string.concat(
-            '{"name":"Uniswap V3 Position",',
-            '"description":"',
-            description,
-            '",',
-            '"image":"data:image/svg+xml;base64,',
-            Base64.encode(bytes(image)),
-            '"}'
-        );
-
         return
             string.concat(
                 "data:application/json;base64,",
