@@ -47,23 +47,3 @@ library Position {
             )
         );
 
-uint128 tokensOwed1 = uint128(
-            PRBMath.mulDiv(
-                feeGrowthInside1X128 - self.feeGrowthInside1LastX128,
-                self.liquidity,
-                FixedPoint128.Q128
-            )
-        );
-
-        self.liquidity = LiquidityMath.addLiquidity(
-            self.liquidity,
-            liquidityDelta
-        );
-        self.feeGrowthInside0LastX128 = feeGrowthInside0X128;
-        self.feeGrowthInside1LastX128 = feeGrowthInside1X128;
-
-        if (tokensOwed0 > 0 || tokensOwed1 > 0) {
-            self.tokensOwed0 += tokensOwed0;
-            self.tokensOwed1 += tokensOwed1;
-     
-}
