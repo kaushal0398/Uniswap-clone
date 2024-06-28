@@ -16,10 +16,6 @@ library NFTRenderer {
         uint24 fee;
     }
 
-    function render(RenderParams memory params)
-        internal
-        view
-        returns (string memory)
     {
         IUniswapV3Pool pool = IUniswapV3Pool(params.pool);
         IERC20 token0 = IERC20(pool.token0());
