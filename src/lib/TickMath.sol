@@ -189,12 +189,7 @@ library TickMath {
             log_2 := or(log_2, shl(51, f))
             r := shr(f, r)
         }
-        assembly {
-            r := shr(127, mul(r, r))
-            let f := shr(128, r)
-            log_2 := or(log_2, shl(50, f))
-        }
-
+       
         int256 log_sqrt10001 = log_2 * 255738958999603826347141; // 128.128 number
 
         int24 tickLow = int24((log_sqrt10001 - 3402992956809132418596140100660247210) >> 128);
