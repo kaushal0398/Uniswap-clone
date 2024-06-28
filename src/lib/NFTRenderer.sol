@@ -112,22 +112,4 @@ library NFTRenderer {
         );
     }
 
-    function renderDescription(
-        string memory symbol0,
-        string memory symbol1,
-        uint24 fee,
-        int24 lowerTick,
-        int24 upperTick
-    ) internal pure returns (string memory description) {
-        description = string.concat(
-            symbol0,
-            "/",
-            symbol1,
-            " ",
-            feeToText(fee),
-            ", Lower tick: ",
-            tickToText(lowerTick),
-            ", Upper text: ",
-            tickToText(upperTick)
-        );
-    }
+   
