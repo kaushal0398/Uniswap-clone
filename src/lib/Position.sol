@@ -39,11 +39,4 @@ library Position {
                 FixedPoint128.Q128
             )
         );
-        uint128 tokensOwed1 = uint128(
-            PRBMath.mulDiv(
-                feeGrowthInside1X128 - self.feeGrowthInside1LastX128,
-                self.liquidity,
-                FixedPoint128.Q128
-            )
-        );
-
+       
