@@ -29,7 +29,7 @@ library LiquidityMath {
         uint256 sqrtPriceAX96,
         uint256 sqrtPriceBX96,
         uint256 amount1
-    ) internal pure returns (uint128 liquidity) {
+    ) internal pure returns (uint256 liquidity) {
         if (sqrtPriceAX96 > sqrtPriceBX96)
             (sqrtPriceAX96, sqrtPriceBX96) = (sqrtPriceBX96, sqrtPriceAX96);
 
