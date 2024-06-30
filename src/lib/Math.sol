@@ -108,7 +108,7 @@ library Math {
     }
 
     function getNextSqrtPriceFromInput(
-        uint160 sqrtPriceX96,
+        uint256 sqrtPriceX96,
         uint256 liquidity,
         uint256 amountIn,
         bool zeroForOne
