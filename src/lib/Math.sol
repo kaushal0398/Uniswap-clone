@@ -109,7 +109,7 @@ library Math {
 
     function getNextSqrtPriceFromInput(
         uint160 sqrtPriceX96,
-        uint128 liquidity,
+        uint256 liquidity,
         uint256 amountIn,
         bool zeroForOne
     ) internal pure returns (uint160 sqrtPriceNextX96) {
@@ -158,7 +158,7 @@ library Math {
         uint256 amountIn
     ) internal pure returns (uint160) {
         return
-            uint160(
+            uint256(
                 uint256(sqrtPriceX96) +
                     PRBMath.mulDiv(amountIn, FixedPoint96.Q96, liquidity)
             );
