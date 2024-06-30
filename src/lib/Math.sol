@@ -93,7 +93,7 @@ library Math {
                 calcAmount1Delta(
                     sqrtPriceAX96,
                     sqrtPriceBX96,
-                    uint128(-liquidity),
+                    uint256(-liquidity),
                     false
                 )
             )
@@ -153,8 +153,8 @@ library Math {
     }
 
     function getNextSqrtPriceFromAmount1RoundingDown(
-        uint160 sqrtPriceX96,
-        uint128 liquidity,
+        uint256 sqrtPriceX96,
+        uint256 liquidity,
         uint256 amountIn
     ) internal pure returns (uint160) {
         return
