@@ -19,15 +19,15 @@ library LiquidityMath {
             sqrtPriceBX96,
             FixedPoint96.Q96
         );
-        liquidity = uint128(
+        liquidity = uint256(
             PRBMath.mulDiv(amount0, intermediate, sqrtPriceBX96 - sqrtPriceAX96)
         );
     }
 
     /// $L = \frac{\Delta y}{\Delta \sqrt{P}}$
     function getLiquidityForAmount1(
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
+        uint256 sqrtPriceAX96,
+        uint256 sqrtPriceBX96,
         uint256 amount1
     ) internal pure returns (uint128 liquidity) {
         if (sqrtPriceAX96 > sqrtPriceBX96)
