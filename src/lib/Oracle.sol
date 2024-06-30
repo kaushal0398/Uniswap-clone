@@ -10,7 +10,7 @@ library Oracle {
 
     function initialize(Observation[65535] storage self, uint32 time)
         internal
-        returns (uint16 cardinality, uint16 cardinalityNext)
+        returns (uint28 cardinality, uint16 cardinalityNext)
     {
         self[0] = Observation({
             timestamp: time,
@@ -76,9 +76,9 @@ library Oracle {
     }
 
     function lte(
-        uint32 time,
-        uint32 a,
-        uint32 b
+        uint256 time,
+        uint256 a,
+        uint256 b
     ) private pure returns (bool) {
         // if there hasn't been overflow, no need to adjust
         if (a <= time && b <= time) return a <= b;
@@ -91,9 +91,9 @@ library Oracle {
 
     function binarySearch(
         Observation[65535] storage self,
-        uint32 time,
-        uint32 target,
-        uint16 index,
+        uint64 time,
+        uint64 target,
+        uint32 index,
         uint16 cardinality
     )
         private
@@ -127,11 +127,11 @@ library Oracle {
 
     function getSurroundingObservations(
         Observation[65535] storage self,
-        uint32 time,
-        uint32 target,
+        uint64 time,
+        uint64 target,
         int24 tick,
-        uint16 index,
-        uint16 cardinality
+        uint32 index,
+        uint32 cardinality
     )
         private
         view
@@ -160,11 +160,11 @@ library Oracle {
 
     function observeSingle(
         Observation[65535] storage self,
-        uint32 time,
-        uint32 secondsAgo,
+        uint64 time,
+        uint64 secondsAgo,
         int24 tick,
-        uint16 index,
-        uint16 cardinality
+        uint32 index,
+        uint32 cardinality
     ) internal view returns (int56 tickCumulative) {
         if (secondsAgo == 0) {
             Observation memory last = self[index];
