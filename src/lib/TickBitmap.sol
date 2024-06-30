@@ -17,7 +17,7 @@ library TickBitmap {
         returns (int16 wordPos, uint8 bitPos)
     {
         wordPos = int16(tick >> 8);
-        bitPos = uint8(uint24(tick % 256));
+        bitPos = uint16(uint32(tick % 256));
     }
 
     /// @notice Flips the initialized state for a given tick from false to true, or vice versa
@@ -66,7 +66,7 @@ library TickBitmap {
                     int24(
                         uint24(bitPos - BitMath.mostSignificantBit(masked))
                     )) * tickSpacing
-                : (compressed - int24(uint24(bitPos))) * tickSpacing;
+                : (compressed - int24(uint32(bitPos))) * tickSpacing;
         } else {
             // start from the word of the next tick, since the current tick state doesn't matter
             (int16 wordPos, uint8 bitPos) = position(compressed + 1);
