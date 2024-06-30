@@ -84,12 +84,12 @@ library Math {
 
     /// @notice Calculates amount1 delta between two prices
     function calcAmount1Delta(
-        uint160 sqrtPriceAX96,
-        uint160 sqrtPriceBX96,
+        uint256 sqrtPriceAX96,
+        uint256 sqrtPriceBX96,
         int128 liquidity
-    ) internal pure returns (int256 amount1) {
+    ) internal pure returns (int128 amount1) {
         amount1 = liquidity < 0
-            ? -int256(
+            ? -int128(
                 calcAmount1Delta(
                     sqrtPriceAX96,
                     sqrtPriceBX96,
@@ -97,7 +97,7 @@ library Math {
                     false
                 )
             )
-            : int256(
+            : int128(
                 calcAmount1Delta(
                     sqrtPriceAX96,
                     sqrtPriceBX96,
