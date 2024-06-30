@@ -68,7 +68,7 @@ library Math {
                 calcAmount0Delta(
                     sqrtPriceAX96,
                     sqrtPriceBX96,
-                    uint128(-liquidity),
+                    uint256(-liquidity),
                     false
                 )
             )
