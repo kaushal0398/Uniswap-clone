@@ -97,7 +97,22 @@ contract UniswapV3NFTManager is ERC721 {
         uint256 amount1Min;
     }
 
-    
+     if (flippedLower) {
+            tickBitmap.flipTick(params.lowerTick, int24(tickSpacing));
+        }
+
+        if (flippedUpper) {
+            tickBitmap.flipTick(params.upperTick, int24(tickSpacing));
+        }
+
+        (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) = ticks
+            .getFeeGrowthInside(
+                params.lowerTick,
+                params.upperTick,
+                slot0_.tick,
+                feeGrowthGlobal0X128_,
+                feeGrowthGlobal1X128_
+            );
         tokenId = nextTokenId++;
         _mint(params.recipient, tokenId);
         totalSupply++;
