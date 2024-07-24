@@ -97,21 +97,7 @@ contract UniswapV3NFTManager is ERC721 {
         uint256 amount1Min;
     }
 
-    function mint(MintParams calldata params) public returns (uint256 tokenId) {
-        IUniswapV3Pool pool = getPool(params.tokenA, params.tokenB, params.fee);
-
-        (uint128 liquidity, uint256 amount0, uint256 amount1) = _addLiquidity(
-            AddLiquidityInternalParams({
-                pool: pool,
-                lowerTick: params.lowerTick,
-                upperTick: params.upperTick,
-                amount0Desired: params.amount0Desired,
-                amount1Desired: params.amount1Desired,
-                amount0Min: params.amount0Min,
-                amount1Min: params.amount1Min
-            })
-        );
-
+    
         tokenId = nextTokenId++;
         _mint(params.recipient, tokenId);
         totalSupply++;
