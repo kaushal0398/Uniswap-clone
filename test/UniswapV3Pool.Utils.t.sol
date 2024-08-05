@@ -75,7 +75,19 @@ abstract contract UniswapV3PoolUtils is Test, TestUtils {
         internal
         pure
         returns (ExpectedTickShort[2] memory ticks)
-    
+    {
+        ticks[0] = ExpectedTickShort({
+            tick: range.lowerTick,
+            initialized: true,
+            liquidityGross: range.amount,
+            liquidityNet: int128(range.amount)
+        });
+        ticks[1] = ExpectedTickShort({
+            tick: range.upperTick,
+            initialized: true,
+            liquidityGross: range.amount,
+            liquidityNet: -int128(range.amount)
+        });
     }
 }
 
