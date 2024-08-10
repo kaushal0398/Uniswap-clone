@@ -290,4 +290,20 @@ contract UniswapV3NFTManager is ERC721 {
             params.amount1Desired
         );
 
-        
+        (amount0, amount1) = params.pool.mint(
+            address(this),
+            params.lowerTick,
+            params.upperTick,
+            liquidity,
+            abi.encode(
+                IUniswapV3Pool.CallbackData({
+                    token0: params.pool.token0(),
+                    token1: params.pool.token1(),
+                    payer: msg.sender
+                })
+            )
+        );
+
+       
+
+   
