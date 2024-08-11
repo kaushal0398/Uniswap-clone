@@ -57,12 +57,5 @@ contract UniswapV3Factory is IUniswapV3PoolDeployer {
                 salt: keccak256(abi.encodePacked(tokenX, tokenY, fee))
             }()
         );
-
-        delete parameters;
-
-        pools[tokenX][tokenY][fee] = pool;
-        pools[tokenY][tokenX][fee] = pool;
-
-        emit PoolCreated(tokenX, tokenY, fee, pool);
     }
 }
