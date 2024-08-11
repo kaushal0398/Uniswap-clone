@@ -11,7 +11,195 @@ import "../src/lib/TickMath.sol";
 import "../src/UniswapV3Factory.sol";
 import "../src/UniswapV3Pool.sol";
 
-idityNet: -int128(liqAmount)
+contract UniswapV3PoolSwapsTest is Test, UniswapV3PoolUtils {
+    ERC20Mintable weth;
+    ERC20Mintable usdc;
+    UniswapV3Factory factory;
+    UniswapV3Pool pool;
+
+    bool transferInMintCallback = true;
+    bool transferInSwapCallback = true;
+    bytes extra;
+
+    function setUp() public {
+        usdc = new ERC20Mintable("USDC", "USDC", 18);
+        weth = new ERC20Mintable("Ether", "ETH", 18);
+        factory = new UniswapV3Factory();
+
+        extra = encodeExtra(address(weth), address(usdc), address(this));
+    }
+
+    //  One price range
+    //
+    //          5000
+    //  4545 -----|----- 5500
+    //
+    function testBuyETHOnePriceRange() public {
+        (
+            LiquidityRange[] memory liquidity,
+            uint256 poolBalance0,
+            uint256 poolBalance1
+        ) = setupPool(
+                PoolParams({
+                    balances: [uint256(1 ether), 5000 ether],
+                    currentPrice: 5000,
+                    liquidity: liquidityRanges(
+                        liquidityRange(4545, 5500, 1 ether, 5000 ether, 5000)
+                    ),
+                    transferInMintCallback: true,
+                    transferInSwapCallback: true,
+                    mintLiqudity: true
+                })
+            );
+
+        uint256 swapAmount = 42 ether; // 42 USDC
+        usdc.mint(address(this), swapAmount);
+        usdc.approve(address(this), swapAmount);
+
+        (int256 userBalance0Before, int256 userBalance1Before) = (
+            int256(weth.balanceOf(address(this))),
+            int256(usdc.balanceOf(address(this)))
+        );
+
+        (int256 amount0Delta, int256 amount1Delta) = pool.swap(
+            address(this),
+            false,
+            swapAmount,
+            sqrtP(5004),
+            extra
+        );
+
+        assertEq(amount0Delta, -0.008371593947078467 ether, "invalid ETH out");
+        assertEq(amount1Delta, 42 ether, "invalid USDC in");
+
+        LiquidityRange memory liq = liquidity[0];
+        assertMany(
+            ExpectedMany({
+                pool: pool,
+                tokens: [weth, usdc],
+                liquidity: liq.amount,
+                sqrtPriceX96: 5604422590555458105735383351329, // 5003.830413717752
+                tick: 85183,
+                fees: [
+                    uint256(0),
+                    27727650748765949686643356806934465 // 0.000081484242041869
+                ],
+                userBalances: [
+                    uint256(userBalance0Before - amount0Delta),
+                    uint256(userBalance1Before - amount1Delta)
+                ],
+                poolBalances: [
+                    uint256(int256(poolBalance0) + amount0Delta),
+                    uint256(int256(poolBalance1) + amount1Delta)
+                ],
+                position: ExpectedPositionShort({
+                    owner: address(this),
+                    ticks: [liq.lowerTick, liq.upperTick],
+                    liquidity: liq.amount,
+                    feeGrowth: [uint256(0), 0],
+                    tokensOwed: [uint128(0), 0]
+                }),
+                ticks: rangeToTicks(liq),
+                observation: ExpectedObservationShort({
+                    index: 0,
+                    timestamp: 1,
+                    tickCumulative: 0,
+                    initialized: true
+                })
+            })
+        );
+    }
+
+    //  Two equal price ranges
+    //
+    //          5000
+    //  4545 -----|----- 5500
+    //  4545 -----|----- 5500
+    //
+    function testBuyETHTwoEqualPriceRanges() public {
+        LiquidityRange memory range = liquidityRange(
+            4545,
+            5500,
+            1 ether,
+            5000 ether,
+            5000
+        );
+        (
+            LiquidityRange[] memory liquidity,
+            uint256 poolBalance0,
+            uint256 poolBalance1
+        ) = setupPool(
+                PoolParams({
+                    balances: [uint256(2 ether), 10000 ether],
+                    currentPrice: 5000,
+                    liquidity: liquidityRanges(range, range),
+                    transferInMintCallback: true,
+                    transferInSwapCallback: true,
+                    mintLiqudity: true
+                })
+            );
+
+        uint256 swapAmount = 42 ether; // 42 USDC
+        usdc.mint(address(this), swapAmount);
+        usdc.approve(address(this), swapAmount);
+
+        (int256 userBalance0Before, int256 userBalance1Before) = (
+            int256(weth.balanceOf(address(this))),
+            int256(usdc.balanceOf(address(this)))
+        );
+
+        (int256 amount0Delta, int256 amount1Delta) = pool.swap(
+            address(this),
+            false,
+            swapAmount,
+            sqrtP(5002),
+            extra
+        );
+
+        assertEq(amount0Delta, -0.008373196666644048 ether, "invalid ETH out");
+        assertEq(amount1Delta, 42 ether, "invalid USDC in");
+
+        LiquidityRange memory liq = liquidity[0];
+        uint128 liqAmount = liquidity[0].amount + liquidity[1].amount;
+
+        assertMany(
+            ExpectedMany({
+                pool: pool,
+                tokens: [weth, usdc],
+                liquidity: liqAmount,
+                sqrtPriceX96: 5603349844017036048802233057296, // 5001.915023528226
+                tick: 85180,
+                fees: [
+                    uint256(0),
+                    13863825374382974843321678403467232 // 0.000040742121020935
+                ],
+                userBalances: [
+                    uint256(userBalance0Before - amount0Delta),
+                    uint256(userBalance1Before - amount1Delta)
+                ],
+                poolBalances: [
+                    uint256(int256(poolBalance0) + amount0Delta),
+                    uint256(int256(poolBalance1) + amount1Delta)
+                ],
+                position: ExpectedPositionShort({
+                    owner: address(this),
+                    ticks: [liq.lowerTick, liq.upperTick],
+                    liquidity: liqAmount,
+                    feeGrowth: [uint256(0), 0],
+                    tokensOwed: [uint128(0), 0]
+                }),
+                ticks: [
+                    ExpectedTickShort({
+                        tick: liq.lowerTick,
+                        initialized: true,
+                        liquidityGross: liqAmount,
+                        liquidityNet: int128(liqAmount)
+                    }),
+                    ExpectedTickShort({
+                        tick: liq.upperTick,
+                        initialized: true,
+                        liquidityGross: liqAmount,
+                        liquidityNet: -int128(liqAmount)
                     })
                 ],
                 observation: ExpectedObservationShort({
@@ -24,7 +212,45 @@ idityNet: -int128(liqAmount)
         );
     }
 
-  
+    //  Consecutive price ranges
+    //
+    //          5000
+    //  4545 -----|----- 5500
+    //             5500 ----------- 6250
+    //
+    function testBuyETHConsecutivePriceRanges() public {
+        (
+            LiquidityRange[] memory liquidity,
+            uint256 poolBalance0,
+            uint256 poolBalance1
+        ) = setupPool(
+                PoolParams({
+                    balances: [uint256(2 ether), 10000 ether],
+                    currentPrice: 5000,
+                    liquidity: liquidityRanges(
+                        liquidityRange(4545, 5500, 1 ether, 5000 ether, 5000),
+                        liquidityRange(5500, 6250, 1 ether, 5000 ether, 5000)
+                    ),
+                    transferInMintCallback: true,
+                    transferInSwapCallback: true,
+                    mintLiqudity: true
+                })
+            );
+
+        uint256 swapAmount = 10000 ether; // 10000 USDC
+        usdc.mint(address(this), swapAmount);
+        usdc.approve(address(this), swapAmount);
+
+        (int256 userBalance0Before, int256 userBalance1Before) = (
+            int256(weth.balanceOf(address(this))),
+            int256(usdc.balanceOf(address(this)))
+        );
+
+        (int256 amount0Delta, int256 amount1Delta) = pool.swap(
+            address(this),
+            false,
+            swapAmount,
+            sqrtP(6106),
             extra
         );
 
@@ -625,7 +851,167 @@ idityNet: -int128(liqAmount)
             })
         );
 
-        nt)
+        assertMany(
+            ExpectedPositionAndTicks({
+                pool: pool,
+                position: ExpectedPositionShort({
+                    owner: address(this),
+                    ticks: [liq2.lowerTick, liq2.upperTick],
+                    liquidity: liq2.amount,
+                    feeGrowth: [uint256(0), 0],
+                    tokensOwed: [uint128(0), 0]
+                }),
+                ticks: [
+                    ExpectedTickShort({
+                        tick: liq2.lowerTick,
+                        initialized: true,
+                        liquidityGross: liq2.amount,
+                        liquidityNet: int128(liq2.amount)
+                    }),
+                    ExpectedTickShort({
+                        tick: liq2.upperTick,
+                        initialized: true,
+                        liquidityGross: liq1.amount + liq2.amount,
+                        liquidityNet: int128(liq1.amount - liq2.amount)
+                    })
+                ]
+            })
+        );
+
+        assertObservation(
+            ExpectedObservation({
+                pool: pool,
+                index: 0,
+                timestamp: 1,
+                tickCumulative: 0,
+                initialized: true
+            })
+        );
+    }
+
+    //  Partially overlapping price ranges
+    //
+    //                5000
+    //        4545 -----|----- 5500
+    //  4000 ----------- 5000-1
+    //
+    function testBuyUSDCPartiallyOverlappingPriceRanges() public {
+        (
+            LiquidityRange[] memory liquidity,
+            uint256 poolBalance0,
+            uint256 poolBalance1
+        ) = setupPool(
+                PoolParams({
+                    balances: [uint256(2 ether), 10000 ether],
+                    currentPrice: 5000,
+                    liquidity: liquidityRanges(
+                        liquidityRange(4545, 5500, 1 ether, 5000 ether, 5000),
+                        liquidityRange(4000, 4999, 1 ether, 5000 ether, 5000)
+                    ),
+                    transferInMintCallback: true,
+                    transferInSwapCallback: true,
+                    mintLiqudity: true
+                })
+            );
+
+        uint256 swapAmount = 2 ether;
+        weth.mint(address(this), swapAmount);
+        weth.approve(address(this), swapAmount);
+
+        (int256 userBalance0Before, int256 userBalance1Before) = (
+            int256(weth.balanceOf(address(this))),
+            int256(usdc.balanceOf(address(this)))
+        );
+
+        (int256 amount0Delta, int256 amount1Delta) = pool.swap(
+            address(this),
+            true,
+            swapAmount,
+            sqrtP(4128),
+            extra
+        );
+
+        assertEq(amount0Delta, 1.996627649722534946 ether, "invalid ETH out");
+        assertEq(
+            amount1Delta,
+            -9282.886546310580739340 ether,
+            "invalid USDC in"
+        );
+
+        LiquidityRange memory liq1 = liquidity[0];
+        LiquidityRange memory liq2 = liquidity[1];
+
+        assertMany(
+            ExpectedPoolAndBalances({
+                pool: pool,
+                tokens: [weth, usdc],
+                liquidity: liq2.amount,
+                sqrtPriceX96: 5090370906297125436716365119488, // 4128.0
+                tick: 83259,
+                fees: [
+                    uint256(1456201564392000426097400539712801), // 0.000004279391781503
+                    0
+                ],
+                userBalances: [
+                    uint256(userBalance0Before - amount0Delta),
+                    uint256(userBalance1Before - amount1Delta)
+                ],
+                poolBalances: [
+                    uint256(int256(poolBalance0) + amount0Delta),
+                    uint256(int256(poolBalance1) + amount1Delta)
+                ]
+            })
+        );
+
+        assertMany(
+            ExpectedPositionAndTicks({
+                pool: pool,
+                position: ExpectedPositionShort({
+                    owner: address(this),
+                    ticks: [liq1.lowerTick, liq1.upperTick],
+                    liquidity: liq1.amount,
+                    feeGrowth: [uint256(0), 0],
+                    tokensOwed: [uint128(0), 0]
+                }),
+                ticks: [
+                    ExpectedTickShort({
+                        tick: liq1.lowerTick,
+                        initialized: true,
+                        liquidityGross: liq1.amount,
+                        liquidityNet: int128(liq1.amount)
+                    }),
+                    ExpectedTickShort({
+                        tick: liq1.upperTick,
+                        initialized: true,
+                        liquidityGross: liq1.amount,
+                        liquidityNet: -int128(liq1.amount)
+                    })
+                ]
+            })
+        );
+
+        assertMany(
+            ExpectedPositionAndTicks({
+                pool: pool,
+                position: ExpectedPositionShort({
+                    owner: address(this),
+                    ticks: [liq2.lowerTick, liq2.upperTick],
+                    liquidity: liq2.amount,
+                    feeGrowth: [uint256(0), 0],
+                    tokensOwed: [uint128(0), 0]
+                }),
+                ticks: [
+                    ExpectedTickShort({
+                        tick: liq2.lowerTick,
+                        initialized: true,
+                        liquidityGross: liq2.amount,
+                        liquidityNet: int128(liq2.amount)
+                    }),
+                    ExpectedTickShort({
+                        tick: liq2.upperTick,
+                        initialized: true,
+                        liquidityGross: liq2.amount,
+                        liquidityNet: -int128(liq2.amount)
                     })
                 ]
             })

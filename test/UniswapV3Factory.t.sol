@@ -65,4 +65,25 @@ contract UniswapV3FactoryTest is Test, TestUtils {
         );
     }
 
-    
+    function testCreatePoolUnsupportedFee() public {
+        vm.expectRevert(encodeError("UnsupportedFee()"));
+        factory.createPool(address(weth), address(usdc), 300);
+    }
+
+    function testCreatePoolIdenticalTokens() public {
+        vm.expectRevert(encodeError("TokensMustBeDifferent()"));
+        factory.createPool(address(weth), address(weth), 500);
+    }
+
+    function testCreateZeroTokenAddress() public {
+        vm.expectRevert(encodeError("ZeroAddressNotAllowed()"));
+        factory.createPool(address(weth), address(0), 500);
+    }
+
+    function testCreateAlreadyExists() public {
+        factory.createPool(address(weth), address(usdc), 500);
+
+        vm.expectRevert(encodeError("PoolAlreadyExists()"));
+        factory.createPool(address(weth), address(usdc), 500);
+    }
+}

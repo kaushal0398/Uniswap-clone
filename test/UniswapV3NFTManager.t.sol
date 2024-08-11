@@ -760,4 +760,3 @@ contract UniswapV3NFTManagerTest is Test, TestUtils {
         nfts_[1] = nft1;
     }
 }
-
