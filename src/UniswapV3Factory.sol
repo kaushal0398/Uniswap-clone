@@ -44,6 +44,14 @@ contract UniswapV3Factory is IUniswapV3PoolDeployer {
         if (pools[tokenX][tokenY][fee] != address(0))
             revert PoolAlreadyExists();
 
+        parameters = PoolParameters({
+            factory: address(this),
+            token0: tokenX,
+            token1: tokenY,
+            tickSpacing: fees[fee],
+            fee: fee
+        });
+
         pool = address(
             new UniswapV3Pool{
                 salt: keccak256(abi.encodePacked(tokenX, tokenY, fee))
