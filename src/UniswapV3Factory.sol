@@ -10,11 +10,6 @@ contract UniswapV3Factory is IUniswapV3PoolDeployer {
     error TokensMustBeDifferent();
     error UnsupportedFee();
 
-    event PoolCreated(
-        address indexed token0,
-        address indexed token1,
-        uint24 indexed fee,
-        address pool
     );
 
     PoolParameters public parameters;
