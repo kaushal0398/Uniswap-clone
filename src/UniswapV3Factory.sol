@@ -8,6 +8,7 @@ contract UniswapV3Factory is IUniswapV3PoolDeployer {
     error PoolAlreadyExists();
     error ZeroAddressNotAllowed();
     error TokensMustBeDifferent();
+    error UnsupportedFee();
 
     event PoolCreated(
         address indexed token0,
