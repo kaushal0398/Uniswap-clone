@@ -5,6 +5,7 @@ import "./interfaces/IUniswapV3PoolDeployer.sol";
 import "./UniswapV3Pool.sol";
 
 contract UniswapV3Factory is IUniswapV3PoolDeployer {
+    error PoolAlreadyExists();
     
     error TokensMustBeDifferent();
     error UnsupportedFee();
