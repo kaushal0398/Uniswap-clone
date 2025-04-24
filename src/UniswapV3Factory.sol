@@ -25,7 +25,7 @@ contract UniswapV3Factory is
     mapping(uint24 => uint24) public fees;
     mapping(address => mapping(address => mapping(uint24 => address)))
         public pools;
-
+IUniswapV3PoolDeployer.sol";
     constructor() {
         fees[500] = 10;
         fees[3000] = 60;
