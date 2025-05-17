@@ -6,6 +6,8 @@ import "forge-std/Test.sol";
 
 import "./ERC20Mintable.sol";
 
+import "../src/UniswapV3Pool.sol";
+import "../src/UniswapV3NFTManager.sol";
 abstract contract Assertions is Test {
     struct ExpectedPoolState {
         UniswapV3Pool pool;
