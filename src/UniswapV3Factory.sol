@@ -8,7 +8,7 @@ import "./UniswapV3Pool.sol";
 
 contract UniswapV3Factory is
  IUniswapV3PoolDeployer {
-    ();
+    error PoolAlreadyExists();
     error ZeroAddressNotAllowed();
     error TokensMustBeDifferent();
     error UnsupportedFee();
